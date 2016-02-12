@@ -13,9 +13,14 @@
         );
          
         $output = '';
+        
+        // set the category query arguments
+        $taxonomy_args = array(
+	        'name' => 'faqpress_categories',
+        );
          
-        // set the query arguments
-        $query_args = array(
+        // set the post query arguments
+        $post_query_args = array(
             // show all posts matching this query
             'posts_per_page'    =>   -1,
             // show the custom post type
@@ -32,7 +37,7 @@
         );
          
         // get the posts with our query arguments
-        $faq_posts = get_posts( $query_args );
+	        $faq_posts = get_posts( $post_query_args );
         $output .= '<div class="faqpress">';
          
         // handle our custom loop
@@ -58,35 +63,6 @@
     }
  
     add_shortcode( 'faqpress', 'faqpress_shortcode' );
- 
-}
-
-
-if ( ! function_exists( 'faqpress_categories' ) ) {
- 
-    // Create Some Categories
-    function faqpress_categories() {
- 
-        // again, labels for the admin panel
-        
-        $args = array(
-	       	'show_ui' => true,
-			'show_admin_column' => true,
-			'hierarchical' => true,
-			'label' => 'FAQ Categories',	// taxonomy name
-			'query_var' => true,	// enable taxonomy-specific querying
-			'rewrite' => array( 'slug' => 'faq-category' ),	// pretty permalinks
-            'public' => true, // make public!
-        );
-        
-        // the contents of the array below specifies which post types should the taxonomy be linked to
-        register_taxonomy( 'faqpress_categories', array( 'faqpressfaq' ), $args );
- 
-    }
- 
-    // hook into the 'init' action
-    add_action( 'init', 'faqpress_categories', 0 );
-
  
 }
  
