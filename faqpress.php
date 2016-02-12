@@ -2,101 +2,92 @@
 /*
 Plugin Name: FAQPress
 Plugin URI: https://github.com/rymcol/FAQPress
-Description: Creates an FAQ System in Wordpress. Shortcode usage: <code>[faq]</code>
+Description: Creates an FAQ System in Wordpress. Shortcode usage: <code>[faqpress]</code>
 Version: 1.0
 Author: Ryan Collins
 Author URI: http://ryanmcollins.com/
 License: https://raw.githubusercontent.com/rymcol/FAQPress/master/LICENSE
 */
  
-if ( ! function_exists( 'tuts_faq_cpt' ) ) {
+if ( ! function_exists( 'faqpress_cpt' ) ) {
  
 // register custom post type
-    function tuts_faq_cpt() {
+    function faqpress_cpt() {
  
-        // these are the labels in the admin interface, edit them as you like
-        $labels = array(
-            'name'                => _x( 'FAQs', 'Post Type General Name', 'tuts_faq' ),
-            'singular_name'       => _x( 'FAQ', 'Post Type Singular Name', 'tuts_faq' ),
-            'menu_name'           => __( 'FAQ', 'tuts_faq' ),
-            'parent_item_colon'   => __( 'Parent Item:', 'tuts_faq' ),
-            'all_items'           => __( 'All Items', 'tuts_faq' ),
-            'view_item'           => __( 'View Item', 'tuts_faq' ),
-            'add_new_item'        => __( 'Add New FAQ Item', 'tuts_faq' ),
-            'add_new'             => __( 'Add New', 'tuts_faq' ),
-            'edit_item'           => __( 'Edit Item', 'tuts_faq' ),
-            'update_item'         => __( 'Update Item', 'tuts_faq' ),
-            'search_items'        => __( 'Search Item', 'tuts_faq' ),
-            'not_found'           => __( 'Not found', 'tuts_faq' ),
-            'not_found_in_trash'  => __( 'Not found in Trash', 'tuts_faq' ),
-        );
-        $args = array(
-            // use the labels above
-            'labels'              => $labels,
-            // we'll only need the title, the Visual editor and the excerpt fields for our post type
-            'supports'            => array( 'title', 'editor', 'excerpt', ),
-            // we're going to create this taxonomy in the next section, but we need to link our post type to it now
-            'taxonomies'          => array( 'tuts_faq_tax' ),
-            // make it public so we can see it in the admin panel and show it in the front-end
-            'public'              => true,
-            // show the menu item under the Pages item
-            'menu_position'       => 20,
-            // show archives, if you don't need the shortcode
-            'has_archive'         => true,
-        );
-        register_post_type( 'tuts_faq', $args );
+		// Interface Labels to Make Sense of Things
+		$labels = array(
+			'name' => _x('FAQPress', 'post type general name'),
+			'singular_name' => _x('Question', 'post type singular name'),
+			'add_new' => _x('Add Question', 'photo item'),
+			'add_new_item' => __('Add New Question'),
+			'all_items' => __('Manage Questions'),
+			'edit_item' => __('Edit Question'),
+			'new_item' => __('New Question'),
+			'view_item' => __('View Question'),
+			'search_items' => __('Search Questions'),
+			'not_found' =>  __('Nothing found'),
+			'not_found_in_trash' => __('Nothing found in Trash'),
+			'parent_item_colon' => ''
+		);
+		
+		$args = array(
+		'public' => true,
+		'labels'  => $labels,
+		'has_archive' => true,
+        'menu_icon' => 'dashicons-book-alt',
+		'taxonomies' => array( 'faqpress_categories'),
+		'capability_type' => 'post',
+		'rewrite' => array('slug'=> 'faq'),
+		'menu_icon' => 'dashicons-book-alt',
+		'supports' => array(
+				'title',
+				'excerpt',
+				'editor',
+				'thumbnail',
+				'page-attributes',
+				'revisions'
+			),
+		);
+		
+        register_post_type( 'faqpressfaq', $args );
  
     }
  
-    // hook into the 'init' action
-    add_action( 'init', 'tuts_faq_cpt', 0 );
+    // Initialize the New Post Type
+    add_action( 'init', 'faqpress_cpt', 0 );
  
 }
  
-if ( ! function_exists( 'tuts_faq_tax' ) ) {
+if ( ! function_exists( 'faqpress_categories' ) ) {
  
-    // register custom taxonomy
-    function tuts_faq_tax() {
+    // Create Some Categories
+    function faqpress_categories() {
  
         // again, labels for the admin panel
-        $labels = array(
-            'name'                       => _x( 'FAQ Categories', 'Taxonomy General Name', 'tuts_faq' ),
-            'singular_name'              => _x( 'FAQ Category', 'Taxonomy Singular Name', 'tuts_faq' ),
-            'menu_name'                  => __( 'FAQ Categories', 'tuts_faq' ),
-            'all_items'                  => __( 'All FAQ Cats', 'tuts_faq' ),
-            'parent_item'                => __( 'Parent FAQ Cat', 'tuts_faq' ),
-            'parent_item_colon'          => __( 'Parent FAQ Cat:', 'tuts_faq' ),
-            'new_item_name'              => __( 'New FAQ Cat', 'tuts_faq' ),
-            'add_new_item'               => __( 'Add New FAQ Cat', 'tuts_faq' ),
-            'edit_item'                  => __( 'Edit FAQ Cat', 'tuts_faq' ),
-            'update_item'                => __( 'Update FAQ Cat', 'tuts_faq' ),
-            'separate_items_with_commas' => __( 'Separate items with commas', 'tuts_faq' ),
-            'search_items'               => __( 'Search Items', 'tuts_faq' ),
-            'add_or_remove_items'        => __( 'Add or remove items', 'tuts_faq' ),
-            'choose_from_most_used'      => __( 'Choose from the most used items', 'tuts_faq' ),
-            'not_found'                  => __( 'Not Found', 'tuts_faq' ),
-        );
+        
         $args = array(
-            // use the labels above
-            'labels'                     => $labels,
-            // taxonomy should be hierarchial so we can display it like a category section
-            'hierarchical'               => true,
-            // again, make the taxonomy public (like the post type)
-            'public'                     => true,
+	       	'show_ui' => true,
+			'show_admin_column' => true,
+			'hierarchical' => true,
+			'label' => 'FAQ Categories',	// taxonomy name
+			'query_var' => true,	// enable taxonomy-specific querying
+			'rewrite' => array( 'slug' => 'faq-category' ),	// pretty permalinks
+            'public' => true, // make public!
         );
+        
         // the contents of the array below specifies which post types should the taxonomy be linked to
-        register_taxonomy( 'tuts_faq_tax', array( 'tuts_faq' ), $args );
+        register_taxonomy( 'faqpress_categories', array( 'faqpressfaq' ), $args );
  
     }
  
     // hook into the 'init' action
-    add_action( 'init', 'tuts_faq_tax', 0 );
+    add_action( 'init', 'faqpress_categories', 0 );
  
 }
  
-if ( ! function_exists( 'tuts_faq_shortcode' ) ) {
+if ( ! function_exists( 'faqpress_shortcode' ) ) {
  
-    function tuts_faq_shortcode( $atts ) {
+    function faqpress_shortcode( $atts ) {
         extract( shortcode_atts(
                 array(
                     // category slug attribute - defaults to blank
@@ -112,12 +103,12 @@ if ( ! function_exists( 'tuts_faq_shortcode' ) ) {
         $query_args = array(
             // show all posts matching this query
             'posts_per_page'    =>   -1,
-            // show the 'tuts_faq' custom post type
-            'post_type'         =>   'tuts_faq',
+            // show the custom post type
+            'post_type'         =>   'faqpressfaq',
             // show the posts matching the slug of the FAQ category specified with the shortcode's attribute
             'tax_query'         =>   array(
                 array(
-                    'taxonomy'  =>   'tuts_faq_tax',
+                    'taxonomy'  =>   'faqpress_categories',
                     'field'     =>   'slug',
                     'terms'     =>   $category,
                 )
@@ -128,7 +119,7 @@ if ( ! function_exists( 'tuts_faq_shortcode' ) ) {
          
         // get the posts with our query arguments
         $faq_posts = get_posts( $query_args );
-        $output .= '<div class="tuts-faq">';
+        $output .= '<div class="faqpress">';
          
         // handle our custom loop
         foreach ( $faq_posts as $post ) {
@@ -137,11 +128,11 @@ if ( ! function_exists( 'tuts_faq_shortcode' ) ) {
             $faq_item_permalink = get_permalink( $post->ID );
             $faq_item_content = get_the_content();
             if( $excerpt == 'true' )
-                $faq_item_content = get_the_excerpt() . '<a href="' . $faq_item_permalink . '">' . __( 'More...', 'tuts_faq' ) . '</a>';
+                $faq_item_content = get_the_excerpt() . '<a href="' . $faq_item_permalink . '">' . __( 'More...', 'faqpressfaq' ) . '</a>';
              
-            $output .= '<div class="tuts-faq-item">';
-            $output .= '<h2 class="faq-item-title">' . $faq_item_title . '</h2>';
-            $output .= '<div class="faq-item-content">' . $faq_item_content . '</div>';
+            $output .= '<div class="faqpress-item">';
+            $output .= '<h2 class="faqrpess-item-title">' . $faq_item_title . '</h2>';
+            $output .= '<div class="faqpress-item-content">' . $faq_item_content . '</div>';
             $output .= '</div>';
         }
          
@@ -152,20 +143,20 @@ if ( ! function_exists( 'tuts_faq_shortcode' ) ) {
         return $output;
     }
  
-    add_shortcode( 'faq', 'tuts_faq_shortcode' );
+    add_shortcode( 'faqpress', 'faqpress_shortcode' );
  
 }
  
-function tuts_faq_activate() {
-    tuts_faq_cpt();
+function faqpress_activate() {
+    faqpress_cpt();
     flush_rewrite_rules();
 }
  
-register_activation_hook( __FILE__, 'tuts_faq_activate' );
+register_activation_hook( __FILE__, 'faqpress_activate' );
  
-function tuts_faq_deactivate() {
+function faqpress_deactivate() {
     flush_rewrite_rules();
 }
-register_deactivation_hook( __FILE__, 'tuts_faq_deactivate' );
+register_deactivation_hook( __FILE__, 'faqpress_deactivate' );
  
 ?>
