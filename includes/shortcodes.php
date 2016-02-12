@@ -15,9 +15,19 @@
         $output = '';
         
         // set the category query arguments
-        $taxonomy_args = array(
+        $taxonomies = array(
 	        'name' => 'faqpress_categories',
         );
+        
+        $terms_args = '';
+        
+		$categories = get_terms( $taxonomies, $terms_args );
+		
+		foreach ($categories as $cat) {
+			echo('<p>' . $cat . '</p>');
+		};
+        
+        
          
         // set the post query arguments
         $post_query_args = array(
