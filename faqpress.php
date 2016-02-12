@@ -9,11 +9,8 @@ Author URI: http://ryanmcollins.com/
 License: https://raw.githubusercontent.com/rymcol/FAQPress/master/LICENSE
 */
  
-// Custom Post Type Registration
+// Custom Post Type & Taxonomy Registration
 require_once('includes/cpt.php');
- 
-// Custom Taxonomy (Category) Registration
-require_once('includes/taxonomy.php');
  
 // Create das shortcodes
 require_once('includes/shortcodes.php');
