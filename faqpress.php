@@ -10,7 +10,7 @@ License: https://raw.githubusercontent.com/rymcol/FAQPress/master/LICENSE
 */
  
 // Custom Post Type Registration
- require_once('includes/cpt.php');
+require_once('includes/cpt.php');
  
 // Custom Taxonomy (Category) Registration
 require_once('includes/taxonomy.php');
