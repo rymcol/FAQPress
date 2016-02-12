@@ -17,5 +17,19 @@ require_once('includes/taxonomy.php');
  
 // Create das shortcodes
 require_once('includes/shortcodes.php');
+
+
+// Handle Activation and Deactivation
+function faqpress_activate() {
+    faqpress_cpt();
+    flush_rewrite_rules();
+}
+ 
+register_activation_hook( __FILE__, 'faqpress_activate' );
+ 
+function faqpress_deactivate() {
+    flush_rewrite_rules();
+}
+register_deactivation_hook( __FILE__, 'faqpress_deactivate' );
  
 ?>

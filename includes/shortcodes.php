@@ -22,14 +22,13 @@
             'post_type'         =>   'faqpressfaq',
             // show the posts matching the slug of the FAQ category specified with the shortcode's attribute
             'tax_query'         =>   array(
-                array(
                     'taxonomy'  =>   'faqpress_categories',
                     'field'     =>   'slug',
                     'terms'     =>   $category,
-                )
             ),
             // tell WordPress that it doesn't need to count total rows - this little trick reduces load on the database if you don't need pagination
             'no_found_rows'     =>   true,
+            'post_status' => 'publish',
         );
          
         // get the posts with our query arguments
@@ -62,14 +61,3 @@
  
 }
  
-function faqpress_activate() {
-    faqpress_cpt();
-    flush_rewrite_rules();
-}
- 
-register_activation_hook( __FILE__, 'faqpress_activate' );
- 
-function faqpress_deactivate() {
-    flush_rewrite_rules();
-}
-register_deactivation_hook( __FILE__, 'faqpress_deactivate' );
