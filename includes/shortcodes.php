@@ -19,13 +19,20 @@
 	        'name' => 'faqpress_categories',
         );
         
-        $terms_args = '';
+        $terms_args = array(
+	        'orderby' => 'count',
+	        'hide_empty' => 0,
+        );
         
 		$categories = get_terms( $taxonomies, $terms_args );
 		
-		foreach ($categories as $cat) {
-			echo('<p>' . $cat . '</p>');
-		};
+		if ( ! empty( $categories ) && ! is_wp_error( $categories ) ){
+		    echo '<ul class="faq-categories">';
+		    foreach ( $categories as $term ) {
+		        echo '<li>' . $term->name . '</li>';
+		    }
+		    echo '</ul>';
+		}
         
         
          
