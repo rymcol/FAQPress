@@ -1,0 +1,11 @@
+/*  
+FAQPress Custom CSS
+*/
+
+ul .faq-categories {
+	float: left;
+}
+
+ul .faq-content {
+	float: right;
+}
