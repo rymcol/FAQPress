@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: FAQPress
+Plugin Name: BootstrapFAQ
 Plugin URI: https://github.com/rymcol/FAQPress
-Description: Creates an FAQ System in Wordpress. Shortcode usage: <code>[faqpress]</code>
+Description: Creates an FAQ System in Wordpress. Shortcode usage: <code>[faqpress category="your-category" excerpt="false"]</code>
 Version: 1.0
 Author: Ryan Collins
 Author URI: http://ryanmcollins.com/

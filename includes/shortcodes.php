@@ -2,89 +2,66 @@
 	
 	if ( ! function_exists( 'faqpress_shortcode' ) ) {
  
-    function faqpress_shortcode( $atts ) {
-        extract( shortcode_atts(
-                array(
-                    // category slug attribute - defaults to blank
-                    'category' => '',
-                    // full content or excerpt attribute - defaults to full content
-                    'excerpt' => 'false',
-                ), $atts )
-        );
-         
-        $output = '';
-        
-        // set the category query arguments
-        $taxonomies = array(
-	        'name' => 'faqpress_categories',
-        );
-        
-        $terms_args = array(
-	        'orderby' => 'count',
-	        'hide_empty' => 0,
-        );
-        
-		$categories = get_terms( $taxonomies, $terms_args );
-		
-		if ( ! empty( $categories ) && ! is_wp_error( $categories ) ){
-		    echo '<div id="faqpress">' . '<ul class="faq-categories">';
-		    foreach ( $categories as $term ) {
-			    
-				// set the post query arguments
-				$post_query_args = array(
-				    // show all posts matching this query
-				    'posts_per_page'    =>   -1,
-				    // show the custom post type
-				    'post_type'         =>   'faqpressfaq',
-				    // show the posts matching the slug of the FAQ category specified with the shortcode's attribute
-				    'tax_query'         =>   array(
-				            'taxonomy'  =>   'faqpress_categories',
-				            'field'     =>   'slug',
-				            'terms'     =>   $term,
-				    ),
-				    // tell WordPress that it doesn't need to count total rows - this little trick reduces load on the database if you don't need pagination
-				    'no_found_rows'     =>   true,
-				    'post_status' => 'publish',
-				);
+	    function faqpress_shortcode( $atts ) {
+	        extract( shortcode_atts(
+	                array(
+	                    // category slug attribute - defaults to blank
+	                    'category' => '',
+	                    // full content or excerpt attribute - defaults to full content
+	                    'excerpt' => 'false',
+	                ), $atts )
+	        );
+	        
+	        // set the post query arguments
+			$post_query_args = array(
+			    'posts_per_page'    =>   -1, //all of the posts
+			    'post_type'         =>   'faqpressfaq', //only within the plugin
+			    // show the posts matching the slug of the FAQ category specified with the shortcode's attribute
+			    'tax_query'         =>   array(
+				    array(
+			            'taxonomy'  =>   'faqpress_categories',
+			            'field'     =>   'slug',
+			            'terms'     =>   $category,
+						)),
+			    'no_found_rows'     =>   true,
+			    'post_status' => 'publish',
+			    'orderby' => 'ID',
+			    'order' => 'ASC',
+			);
+			 
+			// get the posts with our query arguments
+			$faq_posts = new WP_Query( $post_query_args );
+			$postOutput = '<div id="faqpress">';
+			$postOutput .= '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
+			 
+			// loop it!
+			while ( $faq_posts->have_posts() ) {
+				$faq_posts->the_post();
+			    $faq_item_title = get_the_title();
+			    $faq_item_permalink = get_the_permalink();
+			    $faq_item_content = get_the_content();
+			    if( $excerpt == 'true' )
+			        $faq_item_content = $faq_posts->the_excerpt() . '<a href="' . $faq_item_permalink . '">' . __( 'More...', 'faqpressfaq' ) . '</a>';
+				
+				$postCount = $faq_posts->current_post + 1;
 				 
-				// get the posts with our query arguments
-				$faq_posts = get_posts( $post_query_args );
-				$postOutput = '';
-				$postOutput .= '<div class="faqpress-posts">';
-				 
-				// handle our custom loop
-				foreach ( $faq_posts as $post ) {
-				    setup_postdata( $post );
-				    $faq_item_title = get_the_title( $post->ID );
-				    $faq_item_permalink = get_permalink( $post->ID );
-				    $faq_item_content = get_the_content();
-				    if( $excerpt == 'true' )
-				        $faq_item_content = get_the_excerpt() . '<a href="' . $faq_item_permalink . '">' . __( 'More...', 'faqpressfaq' ) . '</a>';
-				     
-				    $postOutput .= '<div class="faqpress-post-item">';
-				    $postOutput .= '<h2 class="faqrpess-post-item-title">' . $faq_item_title . '</h2>';
-				    $postOutput .= '<div class="faqpress-post-item-content">' . $faq_item_content . '</div>';
-				    $postOutput .= '</div>';
-				}
-				 
-				wp_reset_postdata();
-				 
-				$postOutput .= '</div>';
-			
-			$output = '<li>';
-			$output .= $term->name;
-			$output .= '<span>' . $term->description . '</span>';
-			$output .= '<ul class="faq-content"><li>' . $postOutput . '</li></ul>';
-			$output .= '</li>';
-			
-			echo($output);
-		    
-		    }
-		    echo '</ul></div>';
+			 	$postOutput .= '<div class="panel panel-default"><div class="panel-heading" role="tab"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse'.$postCount.'" aria-expanded="false" aria-controls="collapse'.$postCount.'">';
+			    $postOutput .= $faq_item_title;
+			    $postOutput .= '</a></h4></div>';
+			    $postOutput .= '<div id="collapse'.$postCount.'" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne"><div class="panel-body">';
+			    $postOutput .= $faq_item_content;
+			    $postOutput .= '</div></div></div>';
+			}
+			 
+			wp_reset_postdata();
+			 
+			$postOutput .= '</div></div>';
+	        
+	        echo($postOutput);
+
 		}
-    }
  
     add_shortcode( 'faqpress', 'faqpress_shortcode' );
  
-}
+	}
  

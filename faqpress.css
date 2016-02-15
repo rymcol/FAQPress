@@ -2,10 +2,3 @@
 FAQPress Custom CSS
 */
 
-ul .faq-categories li {
-	list-style: none;
-}
-
-ul .faq-content {
-	float: right;
-}
