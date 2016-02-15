@@ -21,7 +21,7 @@ function load_faqpress_css() {
 
     wp_enqueue_style( 'FAQPress', $plugin_url . 'faqpress.css' );
 }
-add_action( 'wp_enqueue_scripts', 'load_fqpress_css' );
+add_action( 'wp_enqueue_scripts', 'load_faqpress_css' );
 
 // Handle Activation and Deactivation
 function faqpress_activate() {
