@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: BootstrapFAQ
+Plugin Name: FAQPress
 Plugin URI: https://github.com/rymcol/FAQPress
 Description: Creates an FAQ System in Wordpress. Shortcode usage: <code>[faqpress category="your-category" excerpt="false"]</code>
 Version: 1.0

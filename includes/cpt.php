@@ -2,10 +2,10 @@
 
 if ( ! function_exists( 'faqpress_cpt' ) ) {
  
-// register custom post type
+// Register our custom post type!
     function faqpress_cpt() {
- 
-		// Interface Labels to Make Sense of Things
+	    
+	    // Name Things!
 		$labels = array(
 			'name' => _x('FAQPress', 'post type general name'),
 			'singular_name' => _x('Question', 'post type singular name'),
@@ -51,22 +51,19 @@ if ( ! function_exists( 'faqpress_cpt' ) ) {
 
 if ( ! function_exists( 'faqpress_categories' ) ) {
  
-    // Create Some Categories
+    // Create Categories
     function faqpress_categories() {
- 
-        // again, labels for the admin panel
         
         $args = array(
 	       	'show_ui' => true,
 			'show_admin_column' => true,
 			'hierarchical' => true,
-			'label' => 'FAQ Categories',	// taxonomy name
-			'query_var' => true,	// enable taxonomy-specific querying
-			'rewrite' => array( 'slug' => 'faq-category' ),	// pretty permalinks
+			'label' => 'FAQ Categories',
+			'query_var' => true,
+			'rewrite' => array( 'slug' => 'faq-category' ),
             'public' => true, // make public!
         );
         
-        // the contents of the array below specifies which post types should the taxonomy be linked to
         register_taxonomy( 'faqpress_categories', array( 'faqpressfaq' ), $args );
  
     }

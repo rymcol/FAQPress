@@ -25,7 +25,7 @@
 						)),
 			    'no_found_rows'     =>   true,
 			    'post_status' => 'publish',
-			    'orderby' => 'ID',
+			    'orderby' => 'date',
 			    'order' => 'ASC',
 			);
 			 
